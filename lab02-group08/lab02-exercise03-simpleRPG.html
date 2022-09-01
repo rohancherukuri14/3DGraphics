@@ -11,11 +11,13 @@
       // What is the problem here?
 
       class Board {
-        constructor(width, height, player_X, player_Y) {
+        constructor(width, height, player_X, player_Y, goal_X, goal_Y) {
           this.height = height;
           this.width = width;
           this.playerX = player_X;
           this.playerY = player_Y;
+          this.goalY = goal_Y;
+          this.goalX = goal_X;
         }
 
         getWidth() {
@@ -24,6 +26,14 @@
 
         getHeight() {
           return this.height;
+        }
+
+        getGoalX() {
+          return this.goalX;
+        }
+
+        getGoalY() {
+          return this.goalY;
         }
 
         getPlayerX() {
@@ -45,27 +55,38 @@
         draw() {
           let board = "";
           for (let i = 1; i <= this.height; i++) {
-            if (i == this.playerY) {
-              board += "`".repeat(this.playerX - 1);
-              board += "8";
-              board += "`".repeat(this.width - this.playerX);
-              board += "\n";
-            } else {
-              board += "`".repeat(this.width);
-              board += "\n";
+            for (let j = 1; j <= this.width; j++) {
+              if (
+                i == this.playerY &&
+                j == this.playerX &&
+                this.playerY == this.goalY &&
+                this.playerX == this.goalX
+              ) {
+                board += "8";
+              } else if (i == this.playerY && j == this.playerX) {
+                board += "8";
+              } else if (i == this.goalY && j == this.goalY) {
+                board += "G";
+              } else {
+                board += "`";
+              }
             }
+            board += "\n";
           }
           console.log(board);
         }
       }
-      var gameBoard = new Board(10, 10, 6, 9);
+      var gameBoard = new Board(10, 10, 6, 9, 1, 1);
       gameBoard.draw();
       var w = gameBoard.getWidth();
       var h = gameBoard.getHeight();
+      var won = false;
       function keyDownFunction(event) {
         console.clear();
         let p_x = gameBoard.getPlayerX();
         let p_y = gameBoard.getPlayerY();
+        let g_x = gameBoard.getGoalX();
+        let g_y = gameBoard.getGoalY();
         if (event.key == "ArrowDown") {
           if (p_y + 1 <= h) {
             gameBoard.setPlayerY(p_y + 1);
@@ -95,6 +116,10 @@
           }
         }
         gameBoard.draw();
+        if (gameBoard.getPlayerX() == g_x && gameBoard.getPlayerY() == g_y) {
+          console.log("You win!");
+          window.removeEventListener("keydown", keyDownFunction);
+        }
       }
       window.addEventListener("keydown", keyDownFunction);
     </script>
