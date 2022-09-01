@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lab 02 Mini Exercise 02</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Here we have 2 dogs, Ralph and Mozart, but both of them
+      // are printed out as Mozart, and they don't make a sound?
+      // What is the problem here?
+
+      class Board {
+        constructor(width, height, player_X, player_Y) {
+          this.height = height;
+          this.width = width;
+          this.playerX = player_X;
+          this.playerY = player_Y;
+        }
+
+        getWidth() {
+          return this.width;
+        }
+
+        getHeight() {
+          return this.height;
+        }
+
+        getPlayerX() {
+          return this.playerX;
+        }
+
+        getPlayerY() {
+          return this.playerY;
+        }
+
+        setPlayerX(new_player_x) {
+          this.playerX = new_player_x;
+        }
+
+        setPlayerY(new_player_y) {
+          this.playerY = new_player_y;
+        }
+
+        draw() {
+          let board = "";
+          for (let i = 1; i <= this.height; i++) {
+            if (i == this.playerY) {
+              board += "`".repeat(this.playerX - 1);
+              board += "8";
+              board += "`".repeat(this.width - this.playerX);
+              board += "\n";
+            } else {
+              board += "`".repeat(this.width);
+              board += "\n";
+            }
+          }
+          console.log(board);
+        }
+      }
+      var gameBoard = new Board(10, 10, 6, 9);
+      gameBoard.draw();
+      var w = gameBoard.getWidth();
+      var h = gameBoard.getHeight();
+      function keyDownFunction(event) {
+        console.clear();
+        let p_x = gameBoard.getPlayerX();
+        let p_y = gameBoard.getPlayerY();
+        if (event.key == "ArrowDown") {
+          if (p_y + 1 <= h) {
+            gameBoard.setPlayerY(p_y + 1);
+          } else {
+            gameBoard.setPlayerY(1);
+          }
+        }
+        if (event.key == "ArrowUp") {
+          if (p_y - 1 >= 1) {
+            gameBoard.setPlayerY(p_y - 1);
+          } else {
+            gameBoard.setPlayerY(h);
+          }
+        }
+        if (event.key == "ArrowLeft") {
+          if (p_x - 1 >= 1) {
+            gameBoard.setPlayerX(p_x - 1);
+          } else {
+            gameBoard.setPlayerX(w);
+          }
+        }
+        if (event.key == "ArrowRight") {
+          if (p_x + 1 <= w) {
+            gameBoard.setPlayerX(p_x + 1);
+          } else {
+            gameBoard.setPlayerX(1);
+          }
+        }
+        gameBoard.draw();
+      }
+      window.addEventListener("keydown", keyDownFunction);
+    </script>
+  </body>
+</html>
