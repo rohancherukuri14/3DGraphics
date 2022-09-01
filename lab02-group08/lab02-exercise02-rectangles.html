@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lab 02 Mini Exercise 02</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Here we have 2 dogs, Ralph and Mozart, but both of them
+      // are printed out as Mozart, and they don't make a sound?
+      // What is the problem here?
+
+      class Rectangle {
+        constructor(width, height) {
+          this.height = height;
+          this.width = width;
+        }
+
+        draw() {
+          let rectangle = "";
+          for (let i = 0; i < this.height; i++) {
+            if (i == 0 || i == this.height - 1) {
+              rectangle += "+".repeat(this.width);
+              rectangle += "\n";
+            } else {
+              rectangle += "+";
+              rectangle += "-".repeat(this.width - 2);
+              rectangle += "+";
+              rectangle += "\n";
+            }
+          }
+          console.log(rectangle);
+        }
+      }
+
+      var rect = new Rectangle(10, 4);
+      rect.draw();
+    </script>
+  </body>
+</html>
