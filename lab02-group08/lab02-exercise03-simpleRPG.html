@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Lab 02 Mini Exercise 02</title>
+    <title>Lab 02 Mini Exercise 03</title>
   </head>
   <body>
     <script type="text/javascript">
@@ -11,17 +11,36 @@
       // What is the problem here?
 
       class Board {
-        constructor(width, height, player_X, player_Y, goal_X, goal_Y) {
+        constructor(
+          width,
+          height,
+          player_X,
+          player_Y,
+          goal_X,
+          goal_Y,
+          traps,
+          obstacles
+        ) {
           this.height = height;
           this.width = width;
           this.playerX = player_X;
           this.playerY = player_Y;
           this.goalY = goal_Y;
           this.goalX = goal_X;
+          this.traps = traps;
+          this.obstacles = obstacles;
         }
 
         getWidth() {
           return this.width;
+        }
+
+        getTraps() {
+          return this.traps;
+        }
+
+        getObstacles() {
+          return this.obstacles;
         }
 
         getHeight() {
@@ -44,6 +63,24 @@
           return this.playerY;
         }
 
+        isTrap(x, y) {
+          for (let i = 0; i < this.traps.length; i++) {
+            if (JSON.stringify([x, y]) == JSON.stringify(this.traps[i])) {
+              return true;
+            }
+          }
+          return false;
+        }
+
+        isObstacle(x, y) {
+          for (let i = 0; i < this.traps.length; i++) {
+            if (JSON.stringify([x, y]) == JSON.stringify(this.obstacles[i])) {
+              return true;
+            }
+          }
+          return false;
+        }
+
         setPlayerX(new_player_x) {
           this.playerX = new_player_x;
         }
@@ -56,7 +93,13 @@
           let board = "";
           for (let i = 1; i <= this.height; i++) {
             for (let j = 1; j <= this.width; j++) {
-              if (
+              if (this.isTrap(i, j) && i == this.playerY && j == this.playerY) {
+                board += "T";
+              } else if (this.isTrap(i, j)) {
+                board += "T";
+              } else if (this.isObstacle(i, j)) {
+                board += "O";
+              } else if (
                 i == this.playerY &&
                 j == this.playerX &&
                 this.playerY == this.goalY &&
@@ -76,7 +119,24 @@
           console.log(board);
         }
       }
-      var gameBoard = new Board(10, 10, 6, 9, 1, 1);
+      var gameBoard = new Board(
+        10,
+        10,
+        6,
+        9,
+        1,
+        1,
+        [
+          [1, 2],
+          [6, 7],
+          [3, 4],
+        ],
+        [
+          [4, 4],
+          [2, 2],
+          [7, 1],
+        ]
+      );
       gameBoard.draw();
       var w = gameBoard.getWidth();
       var h = gameBoard.getHeight();
@@ -115,9 +175,18 @@
             gameBoard.setPlayerX(1);
           }
         }
+        let new_x = gameBoard.getPlayerX();
+        let new_y = gameBoard.getPlayerY();
+        if (gameBoard.isObstacle(new_y, new_x)) {
+          gameBoard.setPlayerX(p_x);
+          gameBoard.setPlayerY(p_y);
+        }
         gameBoard.draw();
-        if (gameBoard.getPlayerX() == g_x && gameBoard.getPlayerY() == g_y) {
+        if (new_x == g_x && new_y == g_y) {
           console.log("You win!");
+          window.removeEventListener("keydown", keyDownFunction);
+        } else if (gameBoard.isTrap(new_y, new_x)) {
+          console.log("You lose!");
           window.removeEventListener("keydown", keyDownFunction);
         }
       }
